@@ -8,7 +8,6 @@ import java.io.IOException;
 
 public class SoundStreamAudioPlayer extends SoundStreamRunnable {
     private static final int BUFFER_SIZE_TRACK = 32768;
-
     private AudioTrackAudioSink track;
 
     public SoundStreamAudioPlayer(int id, String fileName, float tempo, float pitchSemi) throws IOException {

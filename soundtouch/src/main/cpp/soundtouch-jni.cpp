@@ -6,14 +6,9 @@
 #include <stdio.h>
 #include <vector>
 
-//#include <stdio.h>
-//#include <dlfcn.h>
-
 #include "soundtouch/source/SoundTouch.h"
-//#include "TimeShiftEffect.h"
 
 #define LOGV(...)   __android_log_print((int)ANDROID_LOG_INFO, "SOUNDTOUCH", __VA_ARGS__)
-//#define //LOGV(...)
 
 #define DLL_PUBLIC __attribute__ ((visibility ("default")))
 
@@ -84,29 +79,32 @@ static void setRateChange(SoundTouchStream&, float);
 static int copyBytes(jbyte*, queue<jbyte>*, int);
 
 #ifdef __cplusplus
-
+/**
+ * 清理  恢复
+ */
 extern "C" DLL_PUBLIC void Java_com_smp_soundtouchandroid_SoundTouch_clearBytes(
 		JNIEnv *env, jclass thiz, jint track) {
 	SoundTouchStream& soundTouch = stStreams.at(track);
-
 	const int BUFF_SIZE = 8192;
-
 	queue<jbyte>* byteBufferOut = soundTouch.getStream();
-
 	SAMPLETYPE* fBufferIn = new SAMPLETYPE[BUFF_SIZE];
 	soundTouch.clear();
-
 	delete[] fBufferIn;
 	fBufferIn = NULL;
-
 	while (!byteBufferOut->empty()) {
 		byteBufferOut->pop();
 	}
 }
 
 extern "C" DLL_PUBLIC void Java_com_smp_soundtouchandroid_SoundTouch_setup(
-		JNIEnv *env, jclass thiz, jint track, jint channels, jint samplingRate,
-		jint bytesPerSample, jfloat tempo, jfloat pitchSemi) {
+		JNIEnv *env,
+		jclass thiz,
+		jint track,
+		jint channels,
+		jint samplingRate,
+		jint bytesPerSample,
+		jfloat tempo,
+		jfloat pitchSemi) {
 	SoundTouchStream& soundTouch = stStreams.at(track);
 	setup(soundTouch, channels, samplingRate, bytesPerSample, tempo, pitchSemi);
 }
@@ -114,12 +112,9 @@ extern "C" DLL_PUBLIC void Java_com_smp_soundtouchandroid_SoundTouch_setup(
 extern "C" DLL_PUBLIC void Java_com_smp_soundtouchandroid_SoundTouch_finish(
 		JNIEnv *env, jclass thiz, jint track, int length) {
 	SoundTouchStream& soundTouch = stStreams.at(track);
-
 	const int bytesPerSample = soundTouch.getBytesPerSample();
 	const int BUFF_SIZE = length / bytesPerSample;
-
 	queue<jbyte>* byteBufferOut = soundTouch.getStream();
-
 	SAMPLETYPE* fBufferIn = new SAMPLETYPE[BUFF_SIZE];
 	process(soundTouch, fBufferIn, byteBufferOut, BUFF_SIZE, true); //audio is finishing
 
@@ -351,17 +346,13 @@ static void setRateChange(SoundTouchStream& soundTouch, float rateChange) {
 static void setup(SoundTouchStream& soundTouch, int channels, int sampleRate,
 		int bytesPerSample, float tempoChange, float pitchSemi) {
 	soundTouch.setBytesPerSample(bytesPerSample);
-
 	soundTouch.setSampleRate(sampleRate);
 	soundTouch.setChannels(channels);
-
 	soundTouch.setTempo(tempoChange);
 	soundTouch.setPitchSemiTones(pitchSemi);
 	soundTouch.setRateChange(0);
-
 	soundTouch.setSetting(SETTING_USE_QUICKSEEK, false);
 	soundTouch.setSetting(SETTING_USE_AA_FILTER, true);
-
 }
 
 static void convertInput(jbyte* input, float* output, const int BUFF_SIZE,

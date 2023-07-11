@@ -11,37 +11,28 @@ public abstract class SoundStreamRunnable implements Runnable {
     private static final long NOT_SET = Long.MIN_VALUE;
     protected static final int DEFAULT_BYTES_PER_SAMPLE = 2;
     private static final long MAX_OUTPUT_BUFFER_SIZE = 1024;
-
     protected Object pauseLock;
     protected Object sinkLock;
     protected Object decodeLock;
-
     protected volatile long bytesWritten;
-
     protected SoundTouch soundTouch;
     protected volatile AudioDecoder decoder;
-
     protected Handler handler;
-
     private String fileName;
     private boolean bypassSoundTouch;
-
     private volatile long loopStart = NOT_SET;
     private volatile long loopEnd = NOT_SET;
     private volatile AudioSink audioSink;
     private volatile OnProgressChangedListener progressListener;
-
     private volatile boolean paused;
     protected volatile boolean finished;
-
     protected int channels;
     protected int samplingRate;
 
     protected abstract AudioSink initAudioSink() throws IOException;
 
     private void initSoundTouch(int id, float tempo, float pitchSemi) {
-        soundTouch = new SoundTouch(id, channels, samplingRate,
-                DEFAULT_BYTES_PER_SAMPLE, tempo, pitchSemi);
+        soundTouch = new SoundTouch(id, channels, samplingRate, DEFAULT_BYTES_PER_SAMPLE, tempo, pitchSemi);
     }
 
     public long getBytesWritten() {
@@ -176,13 +167,10 @@ public abstract class SoundStreamRunnable implements Runnable {
         initSoundTouch(id, tempo, pitchSemi);
         audioSink = initAudioSink();
         this.fileName = fileName;
-
         handler = new Handler();
-
         pauseLock = new Object();
         sinkLock = new Object();
         decodeLock = new Object();
-
         paused = true;
         finished = false;
     }
@@ -199,7 +187,6 @@ public abstract class SoundStreamRunnable implements Runnable {
             throw new SoundStreamRuntimeException(
                     "Only API level >= 16 supported.");
         }
-
         channels = decoder.getChannels();
         samplingRate = decoder.getSamplingRate();
     }

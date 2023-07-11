@@ -100,13 +100,11 @@ public class MediaCodecAudioDecoder implements AudioDecoder {
         format = extractor.getTrackFormat(0);
         String mime = format.getString(MediaFormat.KEY_MIME);
         durationUs = format.getLong(MediaFormat.KEY_DURATION);
-
         codec = MediaCodec.createDecoderByType(mime);
         codec.configure(format, null, null, 0);
         codec.start();
         codecInputBuffers = codec.getInputBuffers();
         codecOutputBuffers = codec.getOutputBuffers();
-
         extractor.selectTrack(0);
         info = new BufferInfo();
     }

@@ -19,11 +19,9 @@ import java.io.InputStream;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView text_player_play;
     private TextView text_player_stop;
-
     private float tempo = 1.0f;//这个是速度，1.0表示正常设置新的速度控制值，
     private float pitchSemi = 1.0f;//这个是音调，1.0表示正常，
     private float rate = 1.0f;//这个参数是变速又变声的，这个参数大于0，否则会报错
-
     private TextView tempo_show;
     private TextView pitch_show;
     private TextView rate_show;
@@ -76,13 +74,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         f = new File(string +"/bjbj.mp3");
         if (!f.exists()) {
             try {
-                //InputStream is = this.getResources().openRawResource(R.raw.bjbj);
                 InputStream is = this.getResources().getAssets().open("bjbj.mp3");
                 int size = is.available();
                 byte[] buffer = new byte[size];
                 is.read(buffer);
                 is.close();
-                System.out.println("--------------------------------");
                 System.out.println(f.createNewFile()+"-----------------------------------------------");
                 FileOutputStream fos = new FileOutputStream(f);
                 fos.write(buffer);
@@ -177,10 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.text_player:
                 try {
-                    if (player != null)
-                        return;
+                    if (player != null) return;
                     player = new SoundStreamAudioPlayer(0, f.getPath(), tempo, pitchSemi);
-
                     //player.setChannels(1);//取值范围是1，2两个声道
                     //player.setPitchSemi(9.0f);//取值范围是-12到12，超过声音会很差
                     //player.setTempoChange(-10.0f);//设置变速不变调，取值范围是-50到100超过则不处理
